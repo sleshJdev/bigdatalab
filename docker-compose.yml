@@ -37,6 +37,21 @@ services:
       timeout: 5s
       retries: 20
 
+  graphite:
+    image: nickstenning/graphite
+    ports:
+      - "8129:80" # UI
+      - "2003:2003"
+      - "2004:2004"
+      - "7002:7002"
+    expose:
+      - "8129"
+      - "2003"
+      - "2004"
+      - "7002"
+    networks:
+      - bigdata
+
   grafana:
     image: grafana/grafana
     ports:
