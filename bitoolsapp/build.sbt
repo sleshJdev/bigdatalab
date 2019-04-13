@@ -1,5 +1,6 @@
 val ScalatraVersion = "2.6.5"
 val SlickVersion = "3.3.0"
+val DropwizardVersion = "4.0.5"
 
 organization := "com.itechart"
 
@@ -20,7 +21,11 @@ libraryDependencies ++= Seq(
 
   "com.typesafe.slick" %% "slick" % SlickVersion,
   "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion,
-  "mysql" % "mysql-connector-java" % "6.0.6"
+  "mysql" % "mysql-connector-java" % "6.0.6",
+
+  "nl.grons" %% "metrics4-scala" % "4.0.4",
+  "io.dropwizard.metrics" % "metrics-core" % DropwizardVersion,
+  "io.dropwizard.metrics" % "metrics-graphite" % DropwizardVersion
 )
 
 javaOptions ++= Seq("-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044")

@@ -1,4 +1,4 @@
-import com.itechart.bitools.Db._
+import com.itechart.bitools.DatabaseProvider.db
 import com.itechart.bitools._
 import javax.servlet.ServletContext
 import org.scalatra._
