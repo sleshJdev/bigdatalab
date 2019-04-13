@@ -1,0 +1,45 @@
+#
+# This portion of the source code is copyrighted by Thumbtack Technology LLC,
+# all rights reserved, and is subject to the terms of a license agreement
+# in which it constitutes “Pre-existing work” or "Licensed Product".
+#
+
+version: '3.3'
+
+networks:
+  bigdata:
+    driver: bridge
+
+volumes:
+  mysqldata:
+
+services:
+  mysql:
+    image: mysql
+    ports:
+      - "3307:3306"
+    expose:
+      - "3307"
+    volumes:
+      - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - mysqldata:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'sales'
+      MYSQL_USER: 'bigdata'
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_PASSWORD: 'bigdata'
+    networks:
+      - bigdata
+    healthcheck:
+      test: "mysqladmin --user bigdata -pbigdata ping"
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "8130:3000" # UI
+    networks:
+      - bigdata
