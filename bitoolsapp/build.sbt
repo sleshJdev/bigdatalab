@@ -25,6 +25,7 @@ libraryDependencies ++= Seq(
 
   "nl.grons" %% "metrics4-scala" % "4.0.4",
   "io.dropwizard.metrics" % "metrics-core" % DropwizardVersion,
+  "io.dropwizard.metrics" % "metrics-jvm" % DropwizardVersion,
   "io.dropwizard.metrics" % "metrics-graphite" % DropwizardVersion
 )
 

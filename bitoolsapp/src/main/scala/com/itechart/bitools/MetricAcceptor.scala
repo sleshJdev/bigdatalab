@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit
 
 import com.codahale.metrics.MetricFilter
 import com.codahale.metrics.graphite.{Graphite, GraphiteReporter}
+import com.codahale.metrics.jvm.{GarbageCollectorMetricSet, MemoryUsageGaugeSet, ThreadStatesGaugeSet}
 import com.itechart.bitools.ConfigProvider.config
 import nl.grons.metrics4.scala.DefaultInstrumented
 
@@ -12,6 +13,10 @@ object MetricAcceptor extends DefaultInstrumented {
   val metricsPrefix: String = config.getString("metrics.prefix")
   val metricsHost: String = config.getString("metrics.server.address")
   val metricsPort: Int = config.getInt("metrics.server.port")
+
+  metricRegistry.register("jvm.gc", new GarbageCollectorMetricSet())
+  metricRegistry.register("jvm.memory", new MemoryUsageGaugeSet())
+  metricRegistry.register("jvm.thread.state", new ThreadStatesGaugeSet())
 
   val graphite = new Graphite(new InetSocketAddress(metricsHost, metricsPort))
   val reporter: GraphiteReporter = GraphiteReporter.forRegistry(metricRegistry)
