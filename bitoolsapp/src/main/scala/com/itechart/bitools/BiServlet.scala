@@ -56,6 +56,17 @@ class BiServlet extends ScalatraServlet with FutureSupport {
     }
   }
 
+  get("/:apiVersion/orders/generate") {
+    val apiVersion = params.getOrElse("apiVersion", "v1")
+    val count = params.getOrElse("count", "1").toInt
+    writeMetrics(apiVersion)
+    Tables.orders.generate(count) onComplete {
+      case Success(count) => {
+        println(s"$count orders generated")
+      }
+    }
+  }
+
   private def writeMetrics(apiVersion: String): Unit = {
     onApiVersion(apiVersion, request.getMethod.toLowerCase())
 

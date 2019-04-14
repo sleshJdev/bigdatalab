@@ -1,10 +1,12 @@
 package com.itechart.bitools
 
 import java.sql.Timestamp
+import java.time.Instant
+import java.util.concurrent.ThreadLocalRandom
 
 import slick.jdbc.MySQLProfile.api._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 case class Order(fulldate: Timestamp,
                  area: Option[String] = None,
@@ -54,7 +56,41 @@ object Tables {
   }
 
   object orders extends TableQuery(new Orders(_)) {
-    def save(order: Order): Future[Int] = DatabaseProvider.db.run(this.+=(order))
+
+    import DatabaseProvider.db
+
+    implicit def executor: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
+    def save(order: Order): Future[Int] = db.run(this.+=(order))
+
+    def generate(count: Int = 1): Future[Option[Int]] = {
+      val r = for {
+        areas <- db.run(this.map(_.area).distinct.result)
+        countries <- db.run(this.map(_.country).distinct.result)
+        ordermethods <- db.run(this.map(_.ordermethod).distinct.result)
+        products <- db.run(this.map(_.name).distinct.result)
+      } yield (areas, countries, ordermethods, products)
+
+      r.flatMap {
+        case (areas, countries, ordermethods, products) =>
+          val fakeOrders = for (i <- 1 to count) yield Order(
+            Timestamp.from(Instant.now()),
+            areas(ThreadLocalRandom.current().nextInt(areas.size)),
+            countries(ThreadLocalRandom.current().nextInt(countries.size)),
+            Some("Description" + ThreadLocalRandom.current().nextInt(5)),
+            products(ThreadLocalRandom.current().nextInt(products.size)),
+            Some(ThreadLocalRandom.current().nextInt(120)),
+            Some(ThreadLocalRandom.current().nextInt(130)),
+            Some(ThreadLocalRandom.current().nextInt(140)),
+            Some(ThreadLocalRandom.current().nextInt(50)),
+            Some(ThreadLocalRandom.current().nextInt(150)),
+            Some(ThreadLocalRandom.current().nextInt(20)),
+            ordermethods(ThreadLocalRandom.current().nextInt(ordermethods.size)))
+
+          db.run(this.++=(fakeOrders))
+
+      }
+    }
   }
 
 }
