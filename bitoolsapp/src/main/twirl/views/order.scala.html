@@ -1,0 +1,125 @@
+@(apiVersion: String = "v1")(implicit request: javax.servlet.http.HttpServletRequest)
+@import org.scalatra.forms.views._
+
+@layouts.html.default("Big Data Lab - Bi Tools", "Order") {
+    @request.getParameter("apiVersion")
+    <form action="/@apiVersion/orders" method="POST" class="form-horizontal">
+        <div class="row">
+            <label class="col-sm-2 control-label">Location:</label>
+            <div class="col-sm-10">
+                <div class="col-sm-6">
+                    <div class="form-group @if(error("area").nonEmpty) {has-error}">
+                        @Html(select("area",
+                            Seq("North America" -> "North America", "Europe" -> "Europe", "Asia" -> "Asia"),
+                            false, "class" -> "form-control form-control-sm", "placeholder" -> "Area"))
+                        <span class="error">@error("area")</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group @if(error("country").nonEmpty) {has-error}">
+                        @Html(text("country", "class" -> "form-control form-control-sm", "placeholder" -> "Country"))
+                        <span class="error">@error("country")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-2 control-label">Pricing:</label>
+            <div class="col-sm-10">
+                <div class="col-sm-6">
+                    <div class="form-group @if(error("price").nonEmpty) {has-error}">
+                        @Html(text("price", "class" -> "form-control form-control-sm", "placeholder" -> "Price, $"))
+                        <span class="error">@error("price")</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group @if(error("units").nonEmpty) {has-error}">
+                        @Html(text("units", "value" -> "", "class" -> "form-control form-control-sm", "placeholder" -> "Units"))
+                        <span class="error">@error("units")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group @if(error("description").nonEmpty) {has-error}">
+            <label class="col-sm-2 control-label" for="description">Description:</label>
+            <div class="col-sm-10">
+                @Html(textarea("description", "class" -> "form-control form-control-sm"))
+                <span class="error">@error("description")</span>
+            </div>
+        </div>
+        <div class="form-group @if(error("name").nonEmpty) {has-error}">
+            <label class="col-sm-2 control-label" for="name">Product Name:</label>
+            <div class="col-sm-10">
+                @Html(text("name", "class" -> "form-control form-control-sm"))
+                <span class="error">@error("name")</span>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-2 control-label">Size:</label>
+            <div class="col-sm-10">
+                <div class="col-sm-2">
+                    <div class="form-group @if(error("width").nonEmpty) {has-error}">
+                        @Html(text("width", "class" -> "form-control form-control-sm", "placeholder" -> "Width", "value" -> "100"))
+                        <span class="error">@error("width")</span>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group @if(error("height").nonEmpty) {has-error}">
+                        @Html(text("height", "class" -> "form-control form-control-sm", "placeholder" -> "Height", "value" -> "110"))
+                        <span class="error">@error("height")</span>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group @if(error("length").nonEmpty) {has-error}">
+                        @Html(text("length", "class" -> "form-control form-control-sm", "placeholder" -> "Length", "value" -> "120"))
+                        <span class="error">@error("length")</span>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group @if(error("weight").nonEmpty) {has-error}">
+                        @Html(text("weight", "class" -> "form-control form-control-sm", "placeholder" -> "Weight", "value" -> "130"))
+                        <span class="error">@error("weight")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group @if(errors("ordermethod").nonEmpty) {has-error}">
+                <label class="col-sm-2 control-label" for="ordermethod">Order Method:</label>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="checkbox">
+                                <label>@Html(radio("ordermethod", "Web", "checkecked" -> "checkecked")) Web</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="checkbox">
+                                <label>@Html(radio("ordermethod", "Phone")) Phone</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="checkbox">
+                                <label>@Html(radio("ordermethod", "Fax")) Fax</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="checkbox">
+                                <label>@Html(radio("ordermethod", "Email")) Email</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="checkbox">
+                                <label>@Html(radio("ordermethod", "Store")) Store</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <span class="error">@error("ordermethod")</span>
+                </div>
+            </div>
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+}
