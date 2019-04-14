@@ -5,7 +5,7 @@ import java.time.Instant
 
 import com.itechart.bitools.MetricAcceptor._
 import org.scalatra._
-import org.scalatra.forms.{MappingValueType, SingleValueType, double, number, optional, text}
+import org.scalatra.forms.{MappingValueType, double, number, optional, text}
 import org.scalatra.i18n.Messages
 
 import scala.concurrent.ExecutionContext
@@ -15,9 +15,6 @@ class BiServlet extends ScalatraServlet with FutureSupport {
   implicit def executor: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
   val form: MappingValueType[Order] = forms.mapping(
-    "fulldate" -> new SingleValueType[Timestamp]() {
-      def convert(value: String, messages: Messages): Timestamp = Timestamp.from(Instant.now())
-    },
     "area" -> optional(text()),
     "country" -> optional(text()),
     "description" -> optional(text()),
@@ -29,7 +26,13 @@ class BiServlet extends ScalatraServlet with FutureSupport {
     "price" -> optional(double()),
     "units" -> optional(number()),
     "ordermethod" -> optional(text())
-  )(Order.apply)
+  )((area, country, description,
+     name, width, height, length, weight,
+     price, units, ordermethod) =>
+    Order(Timestamp.from(Instant.now()),
+      area, country, description,
+      name, width, height, length, weight,
+      price, units, ordermethod))
 
   get("/") {
     redirect("/v1")

@@ -9,17 +9,17 @@ import slick.jdbc.MySQLProfile.api._
 import scala.concurrent.{ExecutionContext, Future}
 
 case class Order(fulldate: Timestamp,
-                 area: Option[String] = None,
-                 country: Option[String] = None,
-                 description: Option[String] = None,
-                 name: Option[String] = None,
-                 width: Option[Int] = None,
-                 height: Option[Int] = None,
-                 length: Option[Int] = None,
-                 weight: Option[Int] = None,
-                 price: Option[Double] = None,
-                 units: Option[Int] = None,
-                 ordermethod: Option[String] = None)
+                 area: Option[String],
+                 country: Option[String],
+                 description: Option[String],
+                 name: Option[String],
+                 width: Option[Int],
+                 height: Option[Int],
+                 length: Option[Int],
+                 weight: Option[Int],
+                 price: Option[Double],
+                 units: Option[Int],
+                 ordermethod: Option[String])
 
 object Tables {
 
