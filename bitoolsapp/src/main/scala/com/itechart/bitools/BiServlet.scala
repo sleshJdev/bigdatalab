@@ -25,9 +25,12 @@ class BiServlet extends ScalatraServlet
   }
 
   post("/:apiVersion/orders") {
+    val apiVersion = params("apiVersion")
+    val method = request.getMethod.toLowerCase()
     orders.save(order(multiParams)) onComplete {
-      case Success(n) =>
-        views.html.order(params("apiVersion"))
+      case Success(count) =>
+        writeOrdersMetric(count, apiVersion, method)
+        views.html.order(apiVersion)
       case Failure(e) =>
         logger.error(s"Error when saving order", e)
     }
@@ -35,8 +38,11 @@ class BiServlet extends ScalatraServlet
 
   get("/:apiVersion/orders/generate") {
     val count = params.getOrElse("count", "1").toInt
+    val apiVersion = params("apiVersion")
+    val method = request.getMethod.toLowerCase()
     orders.generate(count) onComplete {
       case Success(orders) =>
+        writeOrdersMetric(count, apiVersion, method)
         logger.info(s"$count orders were generated: $orders")
       case Failure(e) =>
         logger.error(s"Error when generating orders", e)
@@ -75,13 +81,16 @@ class BiServlet extends ScalatraServlet
   }
 
   def onRequest(): Unit =
-    meter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.all").mark()
+    counter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.all").inc()
 
   def onException(): Unit =
-    meter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.exceptions").mark()
+    counter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.exceptions").inc()
 
   def writeLatencyMetric(latency: Long): Unit =
     meter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.latency").mark(latency)
+
+  def writeOrdersMetric(orders: Long, apiVersion: String, method: String): Unit =
+    meter(s"orders.$apiVersion.$method.all").mark(orders)
 
   def onTimer(apiVersion: String = "v1", httpMethod: String = "get")(action: => Any): Unit =
     timer(s"request.$apiVersion.$httpMethod.latency")(action)
