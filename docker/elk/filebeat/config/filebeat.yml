@@ -1,0 +1,10 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    tags: ["bigdatalab", "bitools"]
+    fields: {project: "bitools"}
+    paths:
+      - /var/log/bigdata/bitools/*.log
+
+output.logstash:
+  hosts: 'logstash:5044'
