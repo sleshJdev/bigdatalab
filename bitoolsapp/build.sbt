@@ -15,6 +15,7 @@ resolvers += Classpaths.typesafeReleases
 libraryDependencies ++= Seq(
   "org.scalatra" %% "scalatra" % ScalatraVersion,
   "org.scalatra" %% "scalatra-forms" % ScalatraVersion,
+  "org.scalatra" %% "scalatra-metrics" % ScalatraVersion,
   "org.scalatra" %% "scalatra-scalatest" % ScalatraVersion % "test",
   "ch.qos.logback" % "logback-classic" % "1.2.3" % "runtime",
   "org.eclipse.jetty" % "jetty-webapp" % "9.4.9.v20180320" % "container",
@@ -24,7 +25,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion,
   "mysql" % "mysql-connector-java" % "6.0.6",
 
-  "nl.grons" %% "metrics4-scala" % "4.0.4",
   "io.dropwizard.metrics" % "metrics-core" % DropwizardVersion,
   "io.dropwizard.metrics" % "metrics-jvm" % DropwizardVersion,
   "io.dropwizard.metrics" % "metrics-graphite" % DropwizardVersion

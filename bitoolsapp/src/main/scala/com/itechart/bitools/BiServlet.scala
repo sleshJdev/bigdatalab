@@ -1,70 +1,41 @@
 package com.itechart.bitools
 
-import java.sql.Timestamp
-import java.time.Instant
-
-import com.itechart.bitools.MetricAcceptor._
+import com.itechart.bitools.Mappings._
+import com.itechart.bitools.Tables._
 import org.scalatra._
-import org.scalatra.forms.{MappingValueType, double, number, optional, text}
-import org.scalatra.i18n.Messages
+import org.scalatra.metrics.MetricsSupport
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class BiServlet extends ScalatraServlet with FutureSupport {
+class BiServlet extends ScalatraServlet
+  with FutureSupport with MetricsSupport {
+
   implicit def executor: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 
   val logger: Logger = LoggerFactory.getLogger(getClass)
-
-  val form: MappingValueType[Order] = forms.mapping(
-    "area" -> optional(text()),
-    "country" -> optional(text()),
-    "description" -> optional(text()),
-    "name" -> optional(text()),
-    "width" -> optional(number()),
-    "height" -> optional(number()),
-    "length" -> optional(number()),
-    "weight" -> optional(number()),
-    "price" -> optional(double()),
-    "units" -> optional(number()),
-    "ordermethod" -> optional(text())
-  )((area, country, description,
-     name, width, height, length, weight,
-     price, units, ordermethod) =>
-    Order(Timestamp.from(Instant.now()),
-      area, country, description,
-      name, width, height, length, weight,
-      price, units, ordermethod))
 
   get("/") {
     redirect("/v1")
   }
 
   get("/:apiVersion") {
-    val apiVersion = params.getOrElse("apiVersion", "v1")
-    writeMetrics(apiVersion)
-    views.html.order(apiVersion)
+    views.html.order(params("apiVersion"))
   }
 
   post("/:apiVersion/orders") {
-    val apiVersion = params.getOrElse("apiVersion", "v1")
-    writeMetrics(apiVersion)
-    val order = form.convert("", multiParams, Messages())
-
-    Tables.orders.save(order) onComplete {
+    orders.save(order(multiParams)) onComplete {
       case Success(n) =>
-        views.html.order(apiVersion)
+        views.html.order(params("apiVersion"))
       case Failure(e) =>
         logger.error(s"Error when saving order", e)
     }
   }
 
   get("/:apiVersion/orders/generate") {
-    val apiVersion = params.getOrElse("apiVersion", "v1")
     val count = params.getOrElse("count", "1").toInt
-    writeMetrics(apiVersion)
-    Tables.orders.generate(count) onComplete {
+    orders.generate(count) onComplete {
       case Success(orders) =>
         logger.info(s"$count orders were generated: $orders")
       case Failure(e) =>
@@ -72,20 +43,46 @@ class BiServlet extends ScalatraServlet with FutureSupport {
     }
   }
 
-  private def writeMetrics(apiVersion: String): Unit = {
-    onApiVersion(apiVersion, request.getMethod.toLowerCase())
-
+  private def writeMetrics(): Unit = {
+    val apiVersion = params.getOrElse("apiVersion", "v1")
     if (params.contains("exception")) {
       val exception = params.getOrElse("exception", "")
-      onException(apiVersion, request.getMethod.toLowerCase())
+      logger.error("Fake exception", new Exception(exception))
+      onException()
     }
     if (params.contains("latency")) {
       val latency = params("latency").toLong
-      onLatency(latency, request.getMethod.toLowerCase())
+      writeLatencyMetric(latency)
     }
+  }
+
+  override def error(handler: ErrorHandler): Unit = {
+    super.error({
+      case t =>
+        logger.error("Unexpected error occurred", t)
+        onException()
+        throw t
+    })
   }
 
   before() {
     logger.info(s"$request. Params: $multiParams")
   }
+
+  after() {
+    onRequest()
+    writeMetrics()
+  }
+
+  def onRequest(): Unit =
+    meter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.all").mark()
+
+  def onException(): Unit =
+    meter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.exceptions").mark()
+
+  def writeLatencyMetric(latency: Long): Unit =
+    meter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.latency").mark(latency)
+
+  def onTimer(apiVersion: String = "v1", httpMethod: String = "get")(action: => Any): Unit =
+    timer(s"request.$apiVersion.$httpMethod.latency")(action)
 }
