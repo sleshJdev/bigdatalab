@@ -7,7 +7,6 @@ import java.util.concurrent.ThreadLocalRandom
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Success
 
 case class Order(fulldate: Timestamp,
                  area: Option[String],
@@ -78,20 +77,18 @@ object Tables {
             Timestamp.from(Instant.now()),
             areas(ThreadLocalRandom.current().nextInt(areas.size)),
             countries(ThreadLocalRandom.current().nextInt(countries.size)),
-            Some("Description" + ThreadLocalRandom.current().nextInt(5)),
+            Some("Description" + ThreadLocalRandom.current().nextInt(10)),
             products(ThreadLocalRandom.current().nextInt(products.size)),
-            Some(ThreadLocalRandom.current().nextInt(120)),
-            Some(ThreadLocalRandom.current().nextInt(130)),
-            Some(ThreadLocalRandom.current().nextInt(140)),
-            Some(ThreadLocalRandom.current().nextInt(50)),
-            Some(ThreadLocalRandom.current().nextInt(150)),
-            Some(ThreadLocalRandom.current().nextInt(20)),
+            Some(ThreadLocalRandom.current().nextInt(10)),
+            Some(ThreadLocalRandom.current().nextInt(10)),
+            Some(ThreadLocalRandom.current().nextInt(10)),
+            Some(ThreadLocalRandom.current().nextInt(10)),
+            Some(ThreadLocalRandom.current().nextInt(10)),
+            Some(ThreadLocalRandom.current().nextInt(10)),
             ordermethods(ThreadLocalRandom.current().nextInt(ordermethods.size)))
 
           db.run(this.++=(fakeOrders)).map(_ => fakeOrders)
-
       }
     }
   }
-
 }
