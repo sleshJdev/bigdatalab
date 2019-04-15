@@ -7,12 +7,15 @@ import com.itechart.bitools.MetricAcceptor._
 import org.scalatra._
 import org.scalatra.forms.{MappingValueType, double, number, optional, text}
 import org.scalatra.i18n.Messages
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 class BiServlet extends ScalatraServlet with FutureSupport {
   implicit def executor: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
+
+  val logger: Logger = LoggerFactory.getLogger(getClass)
 
   val form: MappingValueType[Order] = forms.mapping(
     "area" -> optional(text()),
@@ -50,12 +53,10 @@ class BiServlet extends ScalatraServlet with FutureSupport {
     val order = form.convert("", multiParams, Messages())
 
     Tables.orders.save(order) onComplete {
-      case Success(n) => {
+      case Success(n) =>
         views.html.order(apiVersion)
-      }
-      case Failure(e) => {
-        e.printStackTrace()
-      }
+      case Failure(e) =>
+        logger.error(s"Error when saving order", e)
     }
   }
 
@@ -64,9 +65,10 @@ class BiServlet extends ScalatraServlet with FutureSupport {
     val count = params.getOrElse("count", "1").toInt
     writeMetrics(apiVersion)
     Tables.orders.generate(count) onComplete {
-      case Success(count) => {
-        println(s"$count orders generated")
-      }
+      case Success(orders) =>
+        logger.info(s"$count orders were generated: $orders")
+      case Failure(e) =>
+        logger.error(s"Error when generating orders", e)
     }
   }
 
@@ -81,5 +83,9 @@ class BiServlet extends ScalatraServlet with FutureSupport {
       val latency = params("latency").toLong
       onLatency(latency, request.getMethod.toLowerCase())
     }
+  }
+
+  before() {
+    logger.info(s"$request. Params: $multiParams")
   }
 }
