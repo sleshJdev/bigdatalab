@@ -28,12 +28,14 @@ class ScalatraBootstrap extends LifeCycle with MetricsBootstrap {
     .filter(MetricFilter.ALL)
     .build(graphite)
 
-  reporter.start(1, TimeUnit.SECONDS)
-
-
   override def init(context: ServletContext) {
     context.mount(new BiServlet, "/*")
+
+    reporter.start(1, TimeUnit.SECONDS)
   }
 
-  override def destroy(context: ServletContext): Unit = db.close()
+  override def destroy(context: ServletContext): Unit = {
+    db.close()
+    reporter.stop()
+  }
 }
