@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom
 import slick.jdbc.MySQLProfile.api._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Success
 
 case class Order(fulldate: Timestamp,
                  area: Option[String],
@@ -63,7 +64,7 @@ object Tables {
 
     def save(order: Order): Future[Int] = db.run(this.+=(order))
 
-    def generate(count: Int = 1): Future[Option[Int]] = {
+    def generate(count: Int = 1): Future[Seq[Order]] = {
       val r = for {
         areas <- db.run(this.map(_.area).distinct.result)
         countries <- db.run(this.map(_.country).distinct.result)
@@ -87,7 +88,7 @@ object Tables {
             Some(ThreadLocalRandom.current().nextInt(20)),
             ordermethods(ThreadLocalRandom.current().nextInt(ordermethods.size)))
 
-          db.run(this.++=(fakeOrders))
+          db.run(this.++=(fakeOrders)).map(_ => fakeOrders)
 
       }
     }
