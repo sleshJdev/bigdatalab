@@ -3,6 +3,8 @@ package com.itechart.bitools
 import com.itechart.bitools.Mappings._
 import com.itechart.bitools.Tables._
 import org.scalatra._
+import org.scalatra.forms.FormSupport
+import org.scalatra.i18n.I18nSupport
 import org.scalatra.metrics.MetricsSupport
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -10,7 +12,8 @@ import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
 class BiServlet extends ScalatraServlet
-  with FutureSupport with MetricsSupport {
+  with FutureSupport with MetricsSupport
+  with FormSupport with I18nSupport {
 
   implicit def executor: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 

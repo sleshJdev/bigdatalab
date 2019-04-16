@@ -2,7 +2,6 @@
 @import org.scalatra.forms.views._
 
 @layouts.html.default("Big Data Lab - Bi Tools", "Order") {
-    @request.getParameter("apiVersion")
     <form action="/@apiVersion/orders" method="POST" class="form-horizontal">
         <div class="row">
             <label class="col-sm-2 control-label">Location:</label>
@@ -34,7 +33,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if(error("units").nonEmpty) {has-error}">
-                        @Html(text("units", "value" -> "", "class" -> "form-control form-control-sm", "placeholder" -> "Units"))
+                        @Html(text("units", "class" -> "form-control form-control-sm", "placeholder" -> "Units"))
                         <span class="error">@error("units")</span>
                     </div>
                 </div>
@@ -59,25 +58,25 @@
             <div class="col-sm-10">
                 <div class="col-sm-2">
                     <div class="form-group @if(error("width").nonEmpty) {has-error}">
-                        @Html(text("width", "class" -> "form-control form-control-sm", "placeholder" -> "Width", "value" -> "100"))
+                        @Html(text("width", "class" -> "form-control form-control-sm", "placeholder" -> "Width"))
                         <span class="error">@error("width")</span>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group @if(error("height").nonEmpty) {has-error}">
-                        @Html(text("height", "class" -> "form-control form-control-sm", "placeholder" -> "Height", "value" -> "110"))
+                        @Html(text("height", "class" -> "form-control form-control-sm", "placeholder" -> "Height"))
                         <span class="error">@error("height")</span>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group @if(error("length").nonEmpty) {has-error}">
-                        @Html(text("length", "class" -> "form-control form-control-sm", "placeholder" -> "Length", "value" -> "120"))
+                        @Html(text("length", "class" -> "form-control form-control-sm", "placeholder" -> "Length"))
                         <span class="error">@error("length")</span>
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="form-group @if(error("weight").nonEmpty) {has-error}">
-                        @Html(text("weight", "class" -> "form-control form-control-sm", "placeholder" -> "Weight", "value" -> "130"))
+                        @Html(text("weight", "class" -> "form-control form-control-sm", "placeholder" -> "Weight"))
                         <span class="error">@error("weight")</span>
                     </div>
                 </div>
@@ -120,6 +119,6 @@
                 </div>
             </div>
         </div>
-        <input type="submit" value="Submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary pull-right">Submit</button>
     </form>
 }
