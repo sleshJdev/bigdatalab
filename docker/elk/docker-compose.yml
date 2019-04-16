@@ -1,13 +1,20 @@
 version: '3.3'
 
-services:
+volumes:
+  es_data:
 
+networks:
+  elk:
+    driver: bridge
+
+services:
   elasticsearch:
     build:
       context: elasticsearch
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
+      - es_data:/usr/share/elasticsearch/data
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
       - "9200:9200"
@@ -64,8 +71,3 @@ services:
       - elk
     depends_on:
       - logstash
-
-networks:
-
-  elk:
-    driver: bridge
