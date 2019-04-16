@@ -23,7 +23,6 @@ services:
     volumes:
       - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - mysqldata:/var/lib/mysql
-    restart: always
     environment:
       MYSQL_DATABASE: 'sales'
       MYSQL_USER: 'bigdata'
