@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -60,24 +60,19 @@
         {
           "refCount": 0,
           "refId": "C",
-          "target": "alias(perSecond(bigdata.bi.debian.com.itechart.bitools.MetricAcceptor.request.v1.*.all.count, 1), 'requests')"
+          "target": "alias(perSecond(bigdata.bi.debian.com.itechart.bitools.BiServlet.request.*.*.all.count, 15), 'requests')"
         },
         {
           "refCount": 0,
           "refId": "A",
-          "target": "alias(perSecond(bigdata.bi.debian.com.itechart.bitools.MetricAcceptor.request.v1.*.exceptions.count, 1), 'exceptions')"
-        },
-        {
-          "refCount": 0,
-          "refId": "B",
-          "target": "alias(perSecond(bigdata.bi.debian.com.itechart.bitools.MetricAcceptor.request.v1.*.latency.mean_rate, 1), 'latency')"
+          "target": "alias(perSecond(bigdata.bi.debian.com.itechart.bitools.BiServlet.request.*.*.exceptions.count, 15), 'exceptions')"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
+      "timeFrom": "5m",
       "timeRegions": [],
       "timeShift": null,
-      "title": "Api Monitoring",
+      "title": "QPS/Exceptions",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -122,10 +117,92 @@
       "datasource": "Graphite",
       "fill": 1,
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 12,
         "x": 12,
         "y": 0
+      },
+      "id": 12,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "target": "aliasByNode(bigdata.bi.*.com.itechart.bitools.BiServlet.orders.*.*.*.m1_rate, 7, 8, 9, 10)"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": "5m",
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "On-Time Orders  ",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": 111
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Graphite",
+      "fill": 1,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 7
       },
       "id": 4,
       "legend": {
@@ -152,11 +229,11 @@
       "targets": [
         {
           "refId": "A",
-          "target": "perSecond(bigdata.bi.*.jvm.gc.*.time, 1)"
+          "target": "aliasByNode(perSecond(bigdata.bi.*.jvm.gc.*.time, 1), 5, 6)"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
+      "timeFrom": "5m",
       "timeRegions": [],
       "timeShift": null,
       "title": "GC Time",
@@ -204,92 +281,10 @@
       "datasource": "Graphite",
       "fill": 1,
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 7
-      },
-      "id": 10,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "refId": "A",
-          "target": "bigdata.bi.*.jvm.thread.state.*.count"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "JVM Threads",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 2,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Graphite",
-      "fill": 1,
-      "gridPos": {
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 7
       },
       "id": 8,
       "legend": {
@@ -316,11 +311,11 @@
       "targets": [
         {
           "refId": "A",
-          "target": "bigdata.bi.*.jvm.memory.total.*"
+          "target": "aliasByNode(bigdata.bi.*.jvm.memory.total.*, 6)"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
+      "timeFrom": "5m",
       "timeRegions": [],
       "timeShift": null,
       "title": "JVM Total",
@@ -371,7 +366,89 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 15
+        "y": 14
+      },
+      "id": 10,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "refId": "A",
+          "target": "aliasByNode(bigdata.bi.*.jvm.thread.state.*.count, 6, 7)"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": "5m",
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "JVM Threads",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Graphite",
+      "fill": 1,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 14
       },
       "id": 6,
       "legend": {
@@ -398,11 +475,11 @@
       "targets": [
         {
           "refId": "A",
-          "target": "bigdata.bi.*.jvm.memory.heap.*"
+          "target": "aliasByNode(bigdata.bi.*.jvm.memory.heap.*, 6)"
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
+      "timeFrom": "5m",
       "timeRegions": [],
       "timeShift": null,
       "title": "JVM Heap",
@@ -443,7 +520,7 @@
       }
     }
   ],
-  "refresh": "1s",
+  "refresh": "5s",
   "schemaVersion": 18,
   "style": "dark",
   "tags": [],
@@ -456,7 +533,12 @@
   },
   "timepicker": {
     "refresh_intervals": [
-      "1s"
+      "1s",
+      "5s",
+      "10s",
+      "15s",
+      "30s",
+      "1m"
     ],
     "time_options": [
       "5m",
@@ -473,5 +555,5 @@
   "timezone": "",
   "title": "Developer Dashboard",
   "uid": "O-canTgWk",
-  "version": 19
+  "version": 13
 }

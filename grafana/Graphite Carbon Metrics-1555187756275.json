@@ -358,7 +358,7 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -395,5 +395,5 @@
   "timezone": "utc",
   "title": "Graphite Carbon Metrics",
   "uid": "ueDxqhgZz",
-  "version": 3
+  "version": 2
 }

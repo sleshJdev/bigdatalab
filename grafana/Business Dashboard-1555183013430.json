@@ -39,7 +39,7 @@
         "thresholdMarkers": true
       },
       "gridPos": {
-        "h": 3,
+        "h": 6,
         "w": 4,
         "x": 0,
         "y": 0
@@ -85,7 +85,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  fulldate as \"time\",\n  sum(price * units) as \"Revenue\"\nFROM sales_raw\nWHERE\n  $__timeFilter(fulldate)\ngroup by 1",
+          "rawSql": "SELECT t.*\nFROM (SELECT\n        fulldate as \"time\",\n        sum(price * units) as \"Revenue\"\n      FROM sales_raw\n      WHERE\n        $__timeFilter(fulldate)\n      GROUP BY 1) t\n      UNION ALL SELECT now(), 0",
           "refId": "A",
           "select": [
             [
@@ -132,8 +132,8 @@
       "datasource": "MySQL",
       "fill": 1,
       "gridPos": {
-        "h": 8,
-        "w": 8,
+        "h": 6,
+        "w": 20,
         "x": 4,
         "y": 0
       },
@@ -150,7 +150,7 @@
         "total": false,
         "values": false
       },
-      "lines": false,
+      "lines": true,
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
@@ -169,7 +169,7 @@
           "group": [],
           "metricColumn": "ordermethod",
           "rawQuery": true,
-          "rawSql": "SELECT\n  fulldate AS \"time\",\n  count(*) as count,\n  ordermethod AS metric\nFROM sales_raw\nWHERE\n  $__timeFilter(fulldate)\ngroup by fulldate, ordermethod\nORDER BY count",
+          "rawSql": "SELECT\n  fulldate AS \"time\",\n  ordermethod AS \"metric\",\n  count(*) AS \"count\"\nFROM sales_raw\nWHERE\n  $__timeFilter(fulldate)\nGROUP BY 1, 2\nORDER BY ordermethod",
           "refId": "A",
           "select": [
             [
@@ -178,6 +178,18 @@
                   "length"
                 ],
                 "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "length"
+                ],
+                "type": "alias"
               }
             ]
           ],
@@ -200,7 +212,7 @@
       "title": "Order Method",
       "tooltip": {
         "shared": false,
-        "sort": 0,
+        "sort": 1,
         "value_type": "individual"
       },
       "type": "graph",
@@ -242,9 +254,9 @@
           {
             "evaluator": {
               "params": [
-                7
+                14
               ],
-              "type": "lt"
+              "type": "gt"
             },
             "operator": {
               "type": "and"
@@ -252,13 +264,13 @@
             "query": {
               "params": [
                 "A",
-                "1h",
+                "5m",
                 "now"
               ]
             },
             "reducer": {
               "params": [],
-              "type": "avg"
+              "type": "sum"
             },
             "type": "query"
           }
@@ -268,7 +280,7 @@
         "frequency": "10s",
         "handler": 1,
         "message": "There is a drop of sales in USA detected!",
-        "name": "sales drop",
+        "name": "orders drop",
         "noDataState": "no_data",
         "notifications": []
       },
@@ -280,40 +292,41 @@
       "description": "Show number of sold units per country ",
       "fill": 1,
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 0
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 6
       },
       "id": 2,
       "interval": "",
       "legend": {
         "alignAsTable": false,
-        "avg": false,
-        "current": false,
+        "avg": true,
+        "current": true,
         "hideEmpty": false,
-        "max": false,
-        "min": false,
+        "max": true,
+        "min": true,
         "rightSide": true,
         "show": true,
-        "total": false,
-        "values": false
+        "total": true,
+        "values": true
       },
       "lines": true,
-      "linewidth": 3,
+      "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
       "percentage": false,
       "pointradius": 2,
-      "points": false,
+      "points": true,
       "renderer": "flot",
       "seriesOverrides": [
         {
-          "alias": ""
+          "alias": "USA",
+          "fill": 5
         }
       ],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
@@ -329,7 +342,7 @@
           ],
           "metricColumn": "country",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(fulldate,$__interval),\n  country AS metric,\n  sum(units) AS \"units\"\nFROM sales_raw\nWHERE\n  $__timeFilter(fulldate)\nGROUP BY 1,2\nORDER BY $__timeGroup(fulldate,$__interval)",
+          "rawSql": "SELECT\n  $__timeGroupAlias(fulldate,$__interval),\n  country AS metric,\n  sum(units) AS \"units\"\nFROM sales_raw\nWHERE\n  $__timeFilter(fulldate)\nGROUP BY 1, 2\nORDER BY $__timeGroup(fulldate,$__interval)",
           "refId": "A",
           "select": [
             [
@@ -370,8 +383,9 @@
           "colorMode": "critical",
           "fill": true,
           "line": true,
-          "op": "lt",
-          "value": 7
+          "op": "gt",
+          "value": 14,
+          "yaxis": "left"
         }
       ],
       "timeFrom": null,
@@ -397,7 +411,7 @@
           "decimals": null,
           "format": "short",
           "label": "",
-          "logBase": 2,
+          "logBase": 1,
           "max": null,
           "min": null,
           "show": true
@@ -425,7 +439,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 11
       },
       "id": 6,
       "links": [],
@@ -532,5 +546,5 @@
   "timezone": "",
   "title": "Business Dashboard",
   "uid": "74lSOhgZz",
-  "version": 9
+  "version": 13
 }
