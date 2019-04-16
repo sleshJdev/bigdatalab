@@ -81,13 +81,13 @@ class BiServlet extends ScalatraServlet
   }
 
   def onRequest(): Unit =
-    counter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.all").inc()
+    counter(s"request.${params.getOrElse("apiVersion", "v1")}.${request.getMethod.toLowerCase()}.all").inc()
 
   def onException(): Unit =
-    counter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.exceptions").inc()
+    counter(s"request.${params.getOrElse("apiVersion", "v1")}.${request.getMethod.toLowerCase()}.exceptions").inc()
 
   def writeLatencyMetric(latency: Long): Unit =
-    meter(s"request.${params("apiVersion")}.${request.getMethod.toLowerCase()}.latency").mark(latency)
+    meter(s"request.${params.getOrElse("apiVersion", "v1")}.${request.getMethod.toLowerCase()}.latency").mark(latency)
 
   def writeOrdersMetric(orders: Long, apiVersion: String, method: String): Unit =
     meter(s"orders.$apiVersion.$method.all").mark(orders)
