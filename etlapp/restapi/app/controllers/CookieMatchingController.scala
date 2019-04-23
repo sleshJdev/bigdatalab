@@ -2,7 +2,8 @@ package controllers
 
 import java.util.concurrent.ThreadLocalRandom
 
-import com.google.inject.{Inject, Singleton}
+import javax.inject.Inject
+import javax.inject.Singleton
 import play.api.http.HttpEntity
 import play.api.mvc._
 

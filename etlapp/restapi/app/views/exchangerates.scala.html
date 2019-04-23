@@ -1,9 +1,13 @@
-@(exchangeRate: BigDecimal)
+@(
+        xxxRate: BigDecimal,
+        yyyRate: BigDecimal,
+        zzzRate: BigDecimal,
 
-@main("Exchange Rates") {
-    @defining(play.core.PlayVersion.current) { version =>
-        <article>
-            <table>
+)
+
+    @main("Exchange Rates") {
+        @defining(play.core.PlayVersion.current) { version =>
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Currency</th>
@@ -14,11 +18,22 @@
                     <tr>
                         <td>XXX/BYN</td>
                         <td>@{
-                            exchangeRate
+                            xxxRate
+                        }</td>
+                    </tr>
+                    <tr>
+                        <td>YYY/USD</td>
+                        <td>@{
+                            yyyRate
+                        }</td>
+                    </tr>
+                    <tr>
+                        <td>ZZZ/EUR</td>
+                        <td>@{
+                            zzzRate
                         }</td>
                     </tr>
                 </tbody>
             </table>
-        </article>
+        }
     }
-}

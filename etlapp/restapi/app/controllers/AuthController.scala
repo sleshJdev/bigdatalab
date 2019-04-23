@@ -1,6 +1,6 @@
 package controllers
 
-import com.google.inject.Inject
+import javax.inject.Inject
 import javax.inject.Singleton
 import play.api.data.Form
 import play.api.data.Forms.{mapping, _}
@@ -35,11 +35,10 @@ class AuthController @Inject()(cc: ControllerComponents,
 
   def signIn(): Action[AppUser] =
     Action(parse.form(appUserForm)) { implicit request: Request[AppUser] =>
-      val signInUser = request.body
-
-      users.get(signInUser.login) match {
+      val user = request.body
+      users.get(user.login) match {
         case Some(AppUser(login, passwordHash)) =>
-          if (signInUser.login == login && passwordHash == encoder.toBase64(signInUser.password)) {
+          if (user.login == login && passwordHash == encoder.toBase64(user.password)) {
             Status(OK).withSession("login" -> login)
           } else {
             Unauthorized(Json.toJson(Message("Login or password are incorrect")))

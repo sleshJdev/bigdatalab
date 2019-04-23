@@ -2,7 +2,7 @@ package controllers
 
 import java.util.concurrent.ThreadLocalRandom
 
-import com.google.inject._
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -36,7 +36,7 @@ class UserController @Inject()(cc: ControllerComponents,
         .map(_.split("""\s"""))
         .map({ case Array("Basic", loginAndPass) ⇒ loginAndPass })
         .map(encoder.fromBase64(_).split(":"))
-        .map({ case Array(userLogin, userPassword) => {
+        .map({ case Array(userLogin, userPassword) =>
           users.get(userLogin) match {
             case Some(AppUser(login, passwordHash)) =>
               if (userLogin == login && passwordHash == encoder.toBase64(userPassword)) {
@@ -46,7 +46,7 @@ class UserController @Inject()(cc: ControllerComponents,
               }
             case _ => Unauthorized(Json.toJson(Message("User not found")))
           }
-        }}).getOrElse(Unauthorized)
+        }).getOrElse(Unauthorized)
     }
 
   def matchUserId(id: Long): Action[AnyContent] =
