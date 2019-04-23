@@ -1,0 +1,24 @@
+@(exchangeRate: BigDecimal)
+
+@main("Exchange Rates") {
+    @defining(play.core.PlayVersion.current) { version =>
+        <article>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Currency</th>
+                        <th>Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>XXX/BYN</td>
+                        <td>@{
+                            exchangeRate
+                        }</td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+    }
+}
