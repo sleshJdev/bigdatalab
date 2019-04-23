@@ -22,9 +22,9 @@ class ExchangeRateController @Inject()(cc: ControllerComponents,
     if (!request.session.get("login").exists(users.contains)) {
       Unauthorized(Json.toJson(Message("Not authorized")))
     } else {
-      val xxxRate = BigDecimal.apply(1.2 + LocalTime.now().getMinute / 60.0)
-      val yyyRate = BigDecimal.apply(3.4 + LocalTime.now().getMinute / 60.0)
-      val zzzRate = BigDecimal.apply(5.6 + LocalTime.now().getMinute / 60.0)
+      val xxxRate = BigDecimal(1.2 + LocalTime.now().getMinute / 60.0)
+      val yyyRate = BigDecimal(3.4 + LocalTime.now().getMinute / 60.0)
+      val zzzRate = BigDecimal(5.6 + LocalTime.now().getMinute / 60.0)
       Ok(views.html.exchangerates(
         xxxRate.setScale(2, RoundingMode.HALF_DOWN),
         yyyRate.setScale(2, RoundingMode.HALF_DOWN),
