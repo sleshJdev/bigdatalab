@@ -2,24 +2,39 @@ package controllers
 
 import java.util.concurrent.ThreadLocalRandom
 
-import javax.inject.Inject
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import play.api.http.HttpEntity
+import play.api.libs.json.Json
 import play.api.mvc._
 
 
 @Singleton
-class CookieMatchingController @Inject()(cc: ControllerComponents,
-                                         encoder: Encoder)
+class UserMatchingController @Inject()(cc: ControllerComponents,
+                                       encoder: Encoder)
   extends AbstractController(cc) {
 
   import InMemoryStorage._
   import Models._
 
+  def matchUserId(id: Long): Action[AnyContent] =
+    Action { implicit request =>
+      request.headers.get(AUTHORIZATION)
+        .map(encoder.decode)
+        .flatMap(data => data.get("login"))
+        .flatMap(users.get)
+        .map(user => {
+          if (isProbability(10)) {
+            InternalServerError("Oops")
+          } else {
+            Ok(Json.toJson(generateUser(id.toString)))
+          }
+        }).getOrElse(Unauthorized)
+    }
+
   def matchUserCookie(cookie: String): Action[AnyContent] =
     Action { implicit request =>
       if (!request.session.get("login").exists(users.contains)) {
-        Status(UNAUTHORIZED)
+        Unauthorized
       } else if (isProbability(10)) {
         Result(
           header = ResponseHeader(MOVED_PERMANENTLY,

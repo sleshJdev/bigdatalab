@@ -4,15 +4,14 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET         /                               controllers.UserController.index
-GET         /v1/users/id/:id                controllers.UserController.matchUserId(id: Long)
-GET         /v1/users/cookie/:cookie        controllers.CookieMatchingController.matchUserCookie(cookie: String)
-GET         /v2/users/cookie/:cookie        controllers.CookieMatchingController.handleUserCookieRedirect(cookie: String)
+GET         /                               controllers.HomeController.index
+GET         /v1/users/id/:id                controllers.UserMatchingController.matchUserId(id: Long)
+GET         /v1/users/cookie/:cookie        controllers.UserMatchingController.matchUserCookie(cookie: String)
+GET         /v2/users/cookie/:cookie        controllers.UserMatchingController.handleUserCookieRedirect(cookie: String)
 
-POST        /v1/auth/token                  controllers.UserController.generateToke()
-
-POST        /sign-up                        controllers.AuthController.signUp()
-POST        /sign-in                        controllers.AuthController.signIn()
+POST        /v1/auth/token                  controllers.AuthController.generateToke()
+POST        /v1/auth/sign-up                controllers.AuthController.signUp()
+POST        /v1/auth/sign-in                controllers.AuthController.signIn()
 
 GET         /exchangerates                  controllers.ExchangeRateController.exchangeRates()
 GET         /countrylookup                  controllers.CountryLookupController.countryLookUp()
