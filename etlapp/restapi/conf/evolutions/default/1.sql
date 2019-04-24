@@ -4,9 +4,9 @@
 
 CREATE TABLE IF NOT EXISTS appuser
 (
-  id       LONG PRIMARY KEY ,
-  login    VARCHAR(50) UNIQUE,
-  password VARCHAR(50),
+  id       LONG PRIMARY KEY AUTO_INCREMENT,
+  login    VARCHAR(50) UNIQUE NOT NULL,
+  password VARCHAR(50) NOT NULL,
 );
 
 # --- !Downs
