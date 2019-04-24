@@ -47,7 +47,7 @@ class AuthController @Inject()(cc: ControllerComponents,
         case Some(_) => UnprocessableEntity(Json.toJson(Message(s"User ${user.login} already exists")))
         case None =>
           val id = repository.saveUser(user)
-          Ok(s"{id: $id}").withSession("login" -> user.login)
+          Redirect(routes.ExchangeRateController.exchangeRates(), SEE_OTHER).withSession("login" -> user.login)
       }
     }
 
@@ -57,7 +57,7 @@ class AuthController @Inject()(cc: ControllerComponents,
       repository.findUser(user.login) match {
         case Some(AppUser(login, passwordHash)) =>
           if (user.login == login && passwordHash == encoder.toBase64(user.password)) {
-            Status(OK).withSession("login" -> login)
+            Redirect(routes.ExchangeRateController.exchangeRates(), SEE_OTHER).withSession("login" -> user.login)
           } else {
             Unauthorized(Json.toJson(Message("Login or password are incorrect")))
           }

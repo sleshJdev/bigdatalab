@@ -5,6 +5,9 @@
 
 # An example controller showing a sample home page
 GET         /                               controllers.HomeController.index
+GET         /signin                         controllers.HomeController.signIn
+GET         /signup                         controllers.HomeController.signUp
+GET         /logout                         controllers.HomeController.logOut
 GET         /v1/users/id/:id                controllers.UserMatchingController.matchUserId(id: Long)
 GET         /v1/users/cookie/:cookie        controllers.UserMatchingController.matchUserCookie(cookie: String)
 GET         /v2/users/cookie/:cookie        controllers.UserMatchingController.handleUserCookieRedirect(cookie: String)
