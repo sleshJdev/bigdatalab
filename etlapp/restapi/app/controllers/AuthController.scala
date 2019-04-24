@@ -1,18 +1,17 @@
 package controllers
 
-import javax.inject.Inject
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, _}
 import play.api.libs.json.Json
-import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents, Request}
+import play.api.mvc._
 
 @Singleton
 class AuthController @Inject()(cc: ControllerComponents,
-                               encoder: Encoder)
+                               encoder: Encoder,
+                               repository: Repository)
   extends AbstractController(cc) {
 
-  import InMemoryStorage._
   import Models._
 
   val appUserForm = Form(
@@ -29,7 +28,7 @@ class AuthController @Inject()(cc: ControllerComponents,
         .map({ case Array("Basic", loginAndPass) ⇒ loginAndPass })
         .map(encoder.fromBase64(_).split(":"))
         .map({ case Array(userLogin, userPassword) =>
-          users.get(userLogin) match {
+          repository.findUser(userLogin) match {
             case Some(AppUser(login, passwordHash)) =>
               if (userLogin == login && passwordHash == encoder.toBase64(userPassword)) {
                 Ok(encoder.encode(Map("login" -> login)))
@@ -44,18 +43,18 @@ class AuthController @Inject()(cc: ControllerComponents,
   def signUp(): Action[AppUser] =
     Action(parse.form(appUserForm)) { implicit request: Request[AppUser] =>
       val user = request.body
-      if (users.contains(user.login)) {
-        UnprocessableEntity(Json.toJson(Message(s"User ${user.login} already exists")))
-      } else {
-        users.put(user.login, user.copy(password = encoder.toBase64(user.password)))
-        Status(OK).withSession("login" -> user.login)
+      repository.findUser(user.login) match {
+        case Some(_) => UnprocessableEntity(Json.toJson(Message(s"User ${user.login} already exists")))
+        case None =>
+          val id = repository.saveUser(user)
+          Ok(s"{id: $id}").withSession("login" -> user.login)
       }
     }
 
   def signIn(): Action[AppUser] =
     Action(parse.form(appUserForm)) { implicit request: Request[AppUser] =>
       val user = request.body
-      users.get(user.login) match {
+      repository.findUser(user.login) match {
         case Some(AppUser(login, passwordHash)) =>
           if (user.login == login && passwordHash == encoder.toBase64(user.password)) {
             Status(OK).withSession("login" -> login)

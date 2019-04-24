@@ -10,10 +10,10 @@ import play.api.mvc._
 
 @Singleton
 class UserMatchingController @Inject()(cc: ControllerComponents,
-                                       encoder: Encoder)
+                                       encoder: Encoder,
+                                       repository: Repository)
   extends AbstractController(cc) {
 
-  import InMemoryStorage._
   import Models._
 
   def matchUserId(id: Long): Action[AnyContent] =
@@ -21,7 +21,7 @@ class UserMatchingController @Inject()(cc: ControllerComponents,
       request.headers.get(AUTHORIZATION)
         .map(encoder.decode)
         .flatMap(data => data.get("login"))
-        .flatMap(users.get)
+        .flatMap(repository.findUser)
         .map(user => {
           if (isProbability(10)) {
             InternalServerError("Oops")
@@ -33,7 +33,7 @@ class UserMatchingController @Inject()(cc: ControllerComponents,
 
   def matchUserCookie(cookie: String): Action[AnyContent] =
     Action { implicit request =>
-      if (!request.session.get("login").exists(users.contains)) {
+      if (request.session.get("login").flatMap(repository.findUser).isEmpty) {
         Unauthorized
       } else if (isProbability(10)) {
         Result(

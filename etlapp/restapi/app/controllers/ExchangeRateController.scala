@@ -2,9 +2,7 @@ package controllers
 
 import java.time.LocalTime
 
-import controllers.InMemoryStorage.users
 import javax.inject.{Inject, Singleton}
-import play.api.http.HttpConfiguration.HttpConfigurationProvider
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 
@@ -12,14 +10,13 @@ import scala.math.BigDecimal.RoundingMode
 
 @Singleton
 class ExchangeRateController @Inject()(cc: ControllerComponents,
-                                       httConf: HttpConfigurationProvider)
+                                       repository: Repository)
   extends AbstractController(cc) {
 
-  import InMemoryStorage._
   import Models._
 
   def exchangeRates(): Action[AnyContent] = Action { implicit request =>
-    if (!request.session.get("login").exists(users.contains)) {
+    if (request.session.get("login").flatMap(repository.findUser).isEmpty) {
       Unauthorized(Json.toJson(Message("Not authorized")))
     } else {
       val xxxRate = BigDecimal(1.2 + LocalTime.now().getMinute / 60.0)

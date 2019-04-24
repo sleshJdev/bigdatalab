@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
+import play.api.db.Database
 import play.api.mvc._
 
 /**
@@ -10,7 +11,7 @@ import play.api.mvc._
 
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents,
-                               encoder: Encoder)
+                               db: Database)
   extends AbstractController(cc) {
 
   def index(): Action[AnyContent] = Action { implicit request =>
