@@ -1,7 +1,5 @@
 package controllers
 
-import java.util.concurrent.ThreadLocalRandom
-
 import play.api.libs.json.{Json, OWrites, Reads}
 
 case class AppUser(login: String, password: String)
@@ -19,7 +17,7 @@ object Models {
 
   def generateUser(key: String): UserInfo = {
     val hash = key.hashCode.abs
-    val usersex = sex(ThreadLocalRandom.current().nextInt(hash % sex.length))
+    val usersex = sex(hash % sex.length)
     var age = 18 + hash % 60
     UserInfo(key, usersex, age)
   }
