@@ -22,13 +22,10 @@ class UserMatchingController @Inject()(cc: ControllerComponents,
         .map(encoder.decode)
         .flatMap(data => data.get("login"))
         .flatMap(repository.findUser)
-        .map(user => {
-          if (isProbability(10)) {
-            InternalServerError("Oops")
-          } else {
-            Ok(Json.toJson(generateUser(id.toString)))
-          }
-        }).getOrElse(Unauthorized)
+        .map(user => respond {
+          Ok(Json.toJson(generateUser(id.toString)))
+        })
+        .getOrElse(Unauthorized)
     }
 
   def matchUserCookie(cookie: String): Action[AnyContent] =
@@ -51,21 +48,23 @@ class UserMatchingController @Inject()(cc: ControllerComponents,
     }
 
   private def handleUserCookieMatching(cookie: String)(implicit request: Request[AnyContent]): Result = {
-    if (isProbability(10)) {
-      InternalServerError("Oops")
-    } else {
+    respond {
       val user = generateUser(cookie)
-      Ok(<user key="user.key">
-        <sex>
-          {user.sex}
-        </sex>
-        <age>
-          {user.age}
-        </age>
-      </user>)
+      Ok(<user key="user.key" sex="{user.sex}" age="{user.age}"></user>)
     }
   }
 
   private def isProbability(percent: Double): Boolean =
     percent / 100.0 >= ThreadLocalRandom.current.nextDouble
+
+  private def respond(task: => Result): Result = {
+    if (isProbability(10)) {
+      InternalServerError("Oops")
+    } else {
+      if (isProbability(10)) {
+        TimeUnit.SECONDS.sleep(5)
+      }
+      task()
+    }
+  }
 }
