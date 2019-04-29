@@ -30,7 +30,7 @@ class UserMatchingController @Inject()(cc: ControllerComponents,
         .map(user => respond(user) {
           Ok(Json.toJson(generateUser(id.toString)))
         })
-        .getOrElse(Json.toJson(Message("Not authorized")))
+        .getOrElse(Unauthorized(Json.toJson(Message("Not authorized"))))
     }
 
   def matchUserCookie(cookie: String): Action[AnyContent] =
@@ -44,7 +44,7 @@ class UserMatchingController @Inject()(cc: ControllerComponents,
         } else {
           handleUserCookieMatching(user, cookie)
         })
-        .getOrElse(Json.toJson(Message("Not authorized")))
+        .getOrElse(Unauthorized(Json.toJson(Message("Not authorized"))))
     }
 
   def handleUserCookieRedirect(cookie: String): Action[AnyContent] =
@@ -52,7 +52,7 @@ class UserMatchingController @Inject()(cc: ControllerComponents,
       request.session.get("login")
         .flatMap(repository.findUser)
         .map(user => handleUserCookieMatching(user, cookie))
-        .getOrElse(Json.toJson(Message("Not authorized")))
+        .getOrElse(Unauthorized(Json.toJson(Message("Not authorized"))))
     }
 
   private def handleUserCookieMatching(user: AppUser, cookie: String)(implicit request: Request[AnyContent]): Result = {
