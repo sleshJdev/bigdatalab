@@ -78,9 +78,9 @@ class UserMatchingController @Inject()(cc: ControllerComponents,
   private def respond(user: AppUser)(resultSupplier: => Result): Result = {
     val limiter = rates.getOrElseUpdate(user, new PerMinuteRateLimiter(RATE_LIMIT_PER_SECOND))
     if (limiter.hit().isExceedLimit) {
-      TooManyRequests(s"You exceed your rate limit - $RATE_LIMIT_PER_SECOND rps")
+      TooManyRequests(Json.toJson(Message(s"You exceed your rate limit - $RATE_LIMIT_PER_SECOND rps")))
     } else if (isProbability(10)) {
-      InternalServerError("Oops")
+      InternalServerError(Json.toJson(Message("Oops")))
     } else {
       if (isProbability(10)) {
         TimeUnit.SECONDS.sleep(5)
