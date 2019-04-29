@@ -6,7 +6,7 @@ EXPOSE 8802
 EXPOSE 9902
 EXPOSE 9000
 
-ADD ./target/universal/restapi-1.0-SNAPSHOT.zip /
+ADD ./restapi-1.0-SNAPSHOT.zip /
 RUN unzip restapi-1.0-SNAPSHOT.zip
 WORKDIR /restapi-1.0-SNAPSHOT
 
