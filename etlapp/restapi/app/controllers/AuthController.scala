@@ -56,7 +56,7 @@ class AuthController @Inject()(cc: ControllerComponents,
       val user = request.body
       repository.findUser(user.login) match {
         case Some(AppUser(login, passwordHash)) =>
-          if (user.login == login && passwordHash == encoder.toBase64(user.password)) {
+          if (user.login == login && passwordHash == encoder.sha512(user.password)) {
             Redirect(routes.ExchangeRateController.exchangeRates(), SEE_OTHER).withSession("login" -> user.login)
           } else {
             Unauthorized(Json.toJson(Message("Login or password are incorrect")))
