@@ -34,7 +34,7 @@ class Repository @Inject()(db: Database, encoder: Encoder) {
       "INSERT INTO APPUSER(LOGIN, PASSWORD) VALUES(?, ?)",
       Statement.RETURN_GENERATED_KEYS)) { stmt =>
       stmt.setString(1, user.login)
-      stmt.setString(2, encoder.toBase64(user.password))
+      stmt.setString(2, encoder.sha512(user.password))
       stmt.executeUpdate()
     }
   })

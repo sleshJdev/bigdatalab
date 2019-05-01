@@ -1,6 +1,8 @@
 package controllers
 
+import java.math.BigInteger
 import java.nio.charset.StandardCharsets
+import java.security.{MessageDigest, NoSuchAlgorithmException}
 import java.util.Base64
 
 import javax.inject.{Inject, Singleton}
@@ -11,6 +13,15 @@ import play.api.mvc.DefaultJWTCookieDataCodec
 class Encoder @Inject()(httConf: HttpConfigurationProvider) {
   private final val jwtCodec = DefaultJWTCookieDataCodec(
     httConf.get.secret, httConf.get.session.jwt)
+
+  def sha512(data: String): String = try {
+    val digest = MessageDigest.getInstance("SHA-512")
+    val bytes = digest.digest(data.getBytes(StandardCharsets.UTF_8))
+    new BigInteger(bytes).toString(16)
+  } catch {
+    case e: NoSuchAlgorithmException =>
+      throw new IllegalArgumentException(e)
+  }
 
   def encode(data: Map[String, String]): String = jwtCodec.encode(data)
 
