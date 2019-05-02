@@ -1,9 +1,14 @@
 version: '3.3'
 
+volumes:
+  redisdata:
+
 services:
   redis:
     build:
       context: docker/redis
+    volumes:
+      - redisdata:/data
     ports:
       - "6379:6379"
   restapi:
