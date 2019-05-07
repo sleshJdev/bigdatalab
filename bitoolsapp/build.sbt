@@ -23,7 +23,7 @@ libraryDependencies ++= Seq(
 
   "com.typesafe.slick" %% "slick" % SlickVersion,
   "com.typesafe.slick" %% "slick-hikaricp" % SlickVersion,
-  "mysql" % "mysql-connector-java" % "6.0.6",
+  "mysql" % "mysql-connector-java" % "8.0.11",
 
   "io.dropwizard.metrics" % "metrics-core" % DropwizardVersion,
   "io.dropwizard.metrics" % "metrics-jvm" % DropwizardVersion,
