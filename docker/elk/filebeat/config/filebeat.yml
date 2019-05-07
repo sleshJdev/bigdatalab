@@ -1,6 +1,12 @@
-filebeat.inputs:
+filebeat:
+  inputs:
   - type: log
     enabled: true
+    multiline:
+      pattern: '\sERROR\s'
+      negate: true
+      match: after
+      max_lines: 300
     tags: ["bigdatalab", "bitools"]
     fields: {project: "bitools"}
     paths:
