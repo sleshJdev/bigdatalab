@@ -20,10 +20,10 @@
   "panels": [
     {
       "cacheTimeout": null,
-      "colorBackground": true,
+      "colorBackground": false,
       "colorPostfix": false,
       "colorPrefix": false,
-      "colorValue": false,
+      "colorValue": true,
       "colors": [
         "#d44a3a",
         "rgba(237, 129, 40, 0.89)",
@@ -63,7 +63,7 @@
       "nullText": null,
       "postfix": "",
       "postfixFontSize": "80%",
-      "prefix": "$__name",
+      "prefix": "",
       "prefixFontSize": "80%",
       "rangeMaps": [
         {
@@ -109,7 +109,7 @@
           ]
         }
       ],
-      "thresholds": "1000000,2000000",
+      "thresholds": "500000,2000000",
       "timeFrom": null,
       "timeShift": null,
       "title": "On Time Revenue ",
@@ -546,5 +546,5 @@
   "timezone": "",
   "title": "Business Dashboard",
   "uid": "74lSOhgZz",
-  "version": 13
+  "version": 16
 }
