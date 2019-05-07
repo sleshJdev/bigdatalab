@@ -19,14 +19,21 @@ object Mappings {
     "weight" -> optional(number()),
     "price" -> optional(double()),
     "units" -> optional(number()),
-    "ordermethod" -> optional(text())
+    "ordermethod" -> optional(text()),
+    "ip" -> optional(text()),
+    "age" -> optional(number()),
+    "sex" -> optional(text()),
+    "userId" -> optional(text()),
+    "userCookieId" -> optional(text()),
+    "currency" -> optional(text())
   )((area, country, description,
      name, width, height, length, weight,
-     price, units, ordermethod) =>
+     price, units, ordermethod, ip, age, sex,
+     userId, userCookieId, currency) =>
     Order(Timestamp.from(Instant.now()),
       area, country, description,
       name, width, height, length, weight,
-      price, units, ordermethod))
+      price, units, ordermethod, ip, age, sex, userId, userCookieId, currency))
 
   def order(params: MultiParams): Order =
     orderFormMapping.convert("", params, Messages())

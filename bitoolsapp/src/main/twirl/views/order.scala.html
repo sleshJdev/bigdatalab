@@ -6,18 +6,26 @@
         <div class="row">
             <label class="col-sm-2 control-label">Location:</label>
             <div class="col-sm-10">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group @if(error("area").nonEmpty) {has-error}">
                         @Html(select("area",
-                            Seq("North America" -> "North America", "Europe" -> "Europe", "Asia" -> "Asia"),
+                            Seq("North America" -> "North America", "Europe" -> "Europe", "Asia" -> "Asia",
+                                "South America" -> "South America", "Australia" -> "Australia",
+                                "Antarcticada" -> "Antarcticada"),
                             false, "class" -> "form-control form-control-sm", "placeholder" -> "Area"))
                         <span class="error">@error("area")</span>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group @if(error("country").nonEmpty) {has-error}">
                         @Html(text("country", "class" -> "form-control form-control-sm", "placeholder" -> "Country"))
                         <span class="error">@error("country")</span>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group @if(error("ip").nonEmpty) {has-error}">
+                        @Html(text("ip", "class" -> "form-control form-control-sm", "placeholder" -> "Ip Adress"))
+                        <span class="error">@error("ipp")</span>
                     </div>
                 </div>
             </div>
@@ -25,16 +33,53 @@
         <div class="row">
             <label class="col-sm-2 control-label">Pricing:</label>
             <div class="col-sm-10">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group @if(error("price").nonEmpty) {has-error}">
                         @Html(text("price", "class" -> "form-control form-control-sm", "placeholder" -> "Price, $"))
                         <span class="error">@error("price")</span>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group @if(error("units").nonEmpty) {has-error}">
                         @Html(text("units", "class" -> "form-control form-control-sm", "placeholder" -> "Units"))
                         <span class="error">@error("units")</span>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group @if(error("currency").nonEmpty) {has-error}">
+                        @Html(text("currency", "class" -> "form-control form-control-sm", "placeholder" -> "Currency"))
+                        <span class="error">@error("currency")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-2 control-label">User Info:</label>
+            <div class="col-sm-10">
+                <div class="col-sm-3">
+                    <div class="form-group @if(error("age").nonEmpty) {has-error}">
+                        @Html(text("age", "class" -> "form-control form-control-sm", "placeholder" -> "Age"))
+                        <span class="error">@error("age")</span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group @if(error("sex").nonEmpty) {has-error}">
+                        @Html(select("sex",
+                            Seq("male" -> "Male", "female" -> "Female"),
+                            false, "class" -> "form-control form-control-sm", "placeholder" -> "Sex"))
+                        <span class="error">@error("sex")</span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group @if(error("userId").nonEmpty) {has-error}">
+                        @Html(text("userId", "class" -> "form-control form-control-sm", "placeholder" -> "User Id"))
+                        <span class="error">@error("userId")</span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group @if(error("userCookieId").nonEmpty) {has-error}">
+                        @Html(text("userCookieId", "class" -> "form-control form-control-sm", "placeholder" -> "User Cookie Id"))
+                        <span class="error">@error("userCookieId")</span>
                     </div>
                 </div>
             </div>
