@@ -30,9 +30,11 @@ class BiServlet extends ScalatraServlet
   post("/:apiVersion/orders") {
     val apiVersion = params("apiVersion")
     val method = request.getMethod.toLowerCase()
-    orders.save(order(multiParams)) onComplete {
+    val newOrder = newOrder(multiParams)
+    orders.save(newOrder) onComplete {
       case Success(count) =>
         writeOrdersMetric(count, apiVersion, method)
+        logger.info("New order created: {}", newOrder)
         views.html.order(apiVersion)
       case Failure(e) =>
         logger.error(s"Error when saving order", e)
@@ -46,7 +48,7 @@ class BiServlet extends ScalatraServlet
     orders.generate(count) onComplete {
       case Success(orders) =>
         writeOrdersMetric(count, apiVersion, method)
-        logger.info(s"$count orders were generated: $orders")
+        logger.info("{} orders were generated: {}", orders.size, orders)
       case Failure(e) =>
         logger.error(s"Error when generating orders", e)
     }
