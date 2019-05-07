@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 while :; do
-    sleep 10s;
-    curl "http://localhost:9889/v1/orders/generate?exception=OrderError&latency=3";
+    # count - number order to be generated, e.g. count=3
+    # exception - exception message to be logged, e.g. &exception=OrderError
+    # latency - response latency in seconds, e.g. &latency=3
+    curl "http://localhost:9889/v1/orders/generate?count=3Error&latency=1";
+    sleep 2s;
 done
