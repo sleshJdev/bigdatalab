@@ -27,7 +27,8 @@ case class Order(fulldate: Timestamp,
                  sex: Option[String],
                  userId: Option[String],
                  userCookieId: Option[String],
-                 currency: Option[String])
+                 currency: Option[String],
+                 productId: Option[Int])
 
 object Tables {
 
@@ -68,11 +69,13 @@ object Tables {
 
     def currency = column[Option[String]]("currency")
 
+    def productId = column[Option[Int]]("product_id")
+
     def * = (
       fulldate, area, country, description,
       name, width, height, length, weight,
       price, units, ordermethod, ip, age, sex,
-      userId, userCookieId, currency) <> (Order.tupled, Order.unapply)
+      userId, userCookieId, currency, productId) <> (Order.tupled, Order.unapply)
   }
 
   val sex = Array("male", "female")
@@ -99,7 +102,7 @@ object Tables {
         ips <- db.run(this.map(_.ip).distinct.result)
         countries <- db.run(this.map(_.country).distinct.result)
         ordermethods <- db.run(this.map(_.ordermethod).distinct.result)
-        products <- db.run(this.map(_.name).distinct.result)
+        products <- db.run(this.map(it => (it.name, it.productId)).distinct.result)
         currencies <- db.run(this.map(_.currency).distinct.result)
       } yield (areas, countries, ips, ordermethods, products, currencies)
 
@@ -111,16 +114,16 @@ object Tables {
             val webCookie = orderMethod.exists(_.equalsIgnoreCase("web"))
 
             val id = random.nextInt(100).toString
-            val key = if (!webCookie) id
-            else Base64.getEncoder.encodeToString(id.getBytes(StandardCharsets.UTF_8))
+            val key = if (!webCookie) id else Base64.getEncoder.encodeToString(id.getBytes(StandardCharsets.UTF_8))
             val userInfo = generateUser(key)
+            val (productName, productId) = products(random.nextInt(products.size))
 
             Order(
               Timestamp.from(Instant.now()),
               areas(ThreadLocalRandom.current().nextInt(areas.size)),
               countries(ThreadLocalRandom.current().nextInt(countries.size)),
               Some("Description" + random.nextInt(10)),
-              products(random.nextInt(products.size)),
+              productName,
               Some(random.nextInt(10)),
               Some(random.nextInt(10)),
               Some(random.nextInt(10)),
@@ -133,7 +136,8 @@ object Tables {
               Some(userInfo.sex),
               if (webCookie) Option.empty else Some(userInfo.key),
               if (webCookie) Some(random.nextDouble().toString) else Option.empty,
-              currencies(random.nextInt(currencies.size))
+              currencies(random.nextInt(currencies.size)),
+              productId
             )
           }
 

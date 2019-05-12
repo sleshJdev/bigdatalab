@@ -33,7 +33,8 @@ object Mappings {
     Order(Timestamp.from(Instant.now()),
       area, country, description,
       name, width, height, length, weight,
-      price, units, ordermethod, ip, age, sex, userId, userCookieId, currency))
+      price, units, ordermethod, ip, age, sex,
+      userId, userCookieId, currency, Option.empty))
 
   def order(params: MultiParams): Order =
     orderFormMapping.convert("", params, Messages())
