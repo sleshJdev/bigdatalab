@@ -46,6 +46,24 @@ services:
     networks:
       - bigdata
 
+  prometheus-mysql:
+    image: prom/mysqld-exporter
+    environment:
+      DATA_SOURCE_NAME: root:root@(mysql:3306)/sales
+    ports:
+    - 9104:9104
+    networks:
+      - bigdata
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+    - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+    - 9090:9090
+    networks:
+      - bigdata
+
   grafana:
     image: grafana/grafana
     ports:
