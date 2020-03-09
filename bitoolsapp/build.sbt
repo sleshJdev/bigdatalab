@@ -1,5 +1,5 @@
-val ScalatraVersion = "2.6.5"
-val SlickVersion = "3.3.0"
+val ScalatraVersion = "2.7.0"
+val SlickVersion = "3.3.2"
 val DropwizardVersion = "4.0.5"
 
 organization := "com.itechart"
@@ -8,7 +8,7 @@ name := "BiToolsApp"
 
 version := "0.1.0-SNAPSHOT"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.13.0"
 
 resolvers += Classpaths.typesafeReleases
 
