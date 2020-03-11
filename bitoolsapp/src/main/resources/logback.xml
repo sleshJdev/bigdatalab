@@ -1,8 +1,8 @@
 <configuration>
     <appender name="STASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/tmp/application.log</file>
+        <file>/tmp/bigdata/bitools/log/application.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>//tmp/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/tmp/bigdata/bitools/log/application.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <encoder>

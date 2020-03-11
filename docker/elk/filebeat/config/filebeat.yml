@@ -10,7 +10,7 @@ filebeat:
     tags: ["bigdatalab", "bitools"]
     fields: {project: "bitools"}
     paths:
-      - /var/log/bigdata/bitools/*.log
+      - '/tmp/bigdata/bitools/log/*.log'
 
 output.logstash:
   hosts: 'logstash:5044'
